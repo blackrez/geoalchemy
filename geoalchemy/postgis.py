@@ -67,6 +67,8 @@ class PGSpatialDialect(SpatialDialect):
     """Implementation of SpatialDialect for PostGIS."""
     
     __functions = {
+                   WKTSpatialElement : 'ST_GeomFromText',
+                   WKBSpatialElement : 'ST_GeomFromWKB',
                    functions.wkt: 'ST_AsText',
                    functions.wkb: 'ST_AsBinary',
                    functions.dimension : 'ST_Dimension',
@@ -111,6 +113,7 @@ class PGSpatialDialect(SpatialDialect):
                    pg_functions.gml : 'ST_AsGML',
                    pg_functions.geojson : 'ST_AsGeoJSON',
                    pg_functions.expand : 'ST_Expand',
+                   functions.is_valid : 'ST_IsValid',
                    functions._within_distance : pg_functions._within_distance
                   }
     
@@ -124,19 +127,4 @@ class PGSpatialDialect(SpatialDialect):
     
     def handle_ddl_before_drop(self, bind, table, column):
         bind.execute(select([func.DropGeometryColumn((table.schema or 'public'), table.name, column.name)]).execution_options(autocommit=True))
-    
-    def handle_ddl_after_create(self, bind, table, column):    
-        bind.execute(select([func.AddGeometryColumn((table.schema or 'public'), 
-                                                    table.name, 
-                                                    column.name, 
-                                                    column.type.srid, 
-                                                    column.type.name, 
-                                                    column.type.dimension)]).execution_options(autocommit=True))
-        if column.type.spatial_index:
-            bind.execute("CREATE INDEX \"idx_%s_%s\" ON \"%s\".\"%s\" USING GIST (%s)" % 
-                            (table.name, column.name, (table.schema or 'public'), table.name, column.name))
-            
-        if not column.nullable:
-            bind.execute("ALTER TABLE \"%s\".\"%s\" ALTER COLUMN \"%s\" SET not null" % 
-                            ((table.schema or 'public'), table.name, column.name))
             

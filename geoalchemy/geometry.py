@@ -54,7 +54,7 @@ class MultiPolygon(Geometry):
     name = 'MULTIPOLYGON'
 
 class GeometryCollection(Geometry):
-    name = 'GEOMETRYCOLLECTION'
+    name = 'geometry(GEOMETRYCOLLECTION)'
 
 class GeometryDDL(object):
     """A DDL extension which integrates SQLAlchemy table create/drop 

@@ -20,7 +20,7 @@ class SpatialDialect(object):
                    functions.wkt: 'AsText',
                    WKTSpatialElement : 'GeomFromText',
                    functions.wkb: 'AsBinary',
-                   WKBSpatialElement : 'GeomFromWKB',
+                   WKBSpatialElement : 'ST_GeomFromWKB',
                    DBSpatialElement : '',
                    functions.dimension : 'Dimension',
                    functions.srid : 'SRID',

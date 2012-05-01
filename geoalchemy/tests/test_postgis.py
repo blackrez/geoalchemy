@@ -27,6 +27,14 @@ class Road(Base):
     road_name = Column(String)
     road_geom = GeometryColumn(Geometry(2), comparator=PGComparator, nullable=False)
 
+
+class Road(Base):
+    __tablename__ = 'ROADS'
+
+    road_id = Column(Integer, primary_key=True)
+    road_name = Column(String)
+    road_geom = GeometryColumn(Geometry(2), comparator=PGComparator, nullable=False)
+
 class Lake(Base):
     __tablename__ = 'lakes'
 
@@ -59,11 +67,7 @@ class Shape(Base):
 
 # enable the DDL extension, which allows CREATE/DROP operations
 # to work correctly.  This is not needed if working with externally
-# defined tables.    
-GeometryDDL(Road.__table__)
-GeometryDDL(Lake.__table__)
-GeometryDDL(spots_table)
-GeometryDDL(Shape.__table__)
+# defined tables.
 
 class TestGeometry(TestCase):
     """Tests for PostGIS
